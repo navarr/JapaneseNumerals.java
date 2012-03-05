@@ -3,7 +3,7 @@ import java.util.Hashtable;
 import java.util.Set;
 
 public class JapaneseNumerals {
-    static final int FLAG_USE_FORMAL = 1;
+	static final int FLAG_USE_FORMAL = 1;
 	static final int FLAG_USE_FORMAL_TEN_THOUSAND = 2;
 	static final int FLAG_USE_FORMAL_MAN = 2;
 
@@ -126,17 +126,17 @@ public class JapaneseNumerals {
 
 	/*
 	 * UNDER CONSTRUCTION FOR JapaneseNumerals.from();
-	 *
+	 * 
 	 * protected static ArrayList<Hashtable<String, String>>
 	 * getDefinitionTables() { ArrayList<Hashtable<String, String>> table = new
 	 * ArrayList<Hashtable<String, String>>(); for (int i = 0; i < 2; ++i)
 	 * table.add(new Hashtable<String, String>());
-	 *
+	 * 
 	 * Hashtable<String, String> numbers = getNumbers(0); Set<String> keySet =
 	 * numbers.keySet(); String[] keys = (String[]) keySet.toArray(); for
 	 * (String key : keys) { table.get(0).put(numbers.get(key), key); }
 	 * table.get(0).put("0", getZero(0)); table.get(0).put("0", getZero(1));
-	 *
+	 * 
 	 * return table; }
 	 */
 
