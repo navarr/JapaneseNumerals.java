@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -7,17 +8,21 @@ public class JapaneseNumerals {
 	static final int FLAG_USE_FORMAL_MAN = 2;
 
 	public static String to(Integer num) {
-		return to(num.toString(), 0);
+		return to(num.toString());
 	}
+
 	public static String to(String num) {
-		return to(num,0);
+		return to(num, 0);
 	}
+
 	public static String to(Integer num, int flags) {
 		return to(num.toString(), flags);
 	}
+
 	public static String to(String num, int flags) {
-		return to(num,null,flags);
+		return to(num, null, flags);
 	}
+
 	public static String to(Double num) {
 		return to(num, 0);
 	}
@@ -28,11 +33,17 @@ public class JapaneseNumerals {
 	}
 
 	public static String to(Integer left, String right) {
-		return to(left,right,0);
+		return to(left.toString(), right);
 	}
+
+	public static String to(String left, String right) {
+		return to(left, right, 0);
+	}
+
 	public static String to(Integer left, String right, int flags) {
-		return to(left.toString(),right,flags);
+		return to(left.toString(), right, flags);
 	}
+
 	public static String to(String left, String right, int flags) {
 		String data_string = "";
 		String decimal_string = "";
@@ -53,62 +64,85 @@ public class JapaneseNumerals {
 		String[] data_array = new String[(left.length() / 4)];
 		while (i <= left.length()) {
 			int s = left.length() - i;
-			if(s < 0) s = 0;
-			data_array[c] = left.substring(s, s+4);
+			if (s < 0)
+				s = 0;
+			data_array[c] = left.substring(s, s + 4);
 			++c;
 			i += 4;
 		}
 
 		c = 0;
-		for(String v : data_array)
-		{
-			if(v.equals("0000")) { ++c; continue; }
+		for (String v : data_array) {
+			if (v.equals("0000")) {
+				++c;
+				continue;
+			}
 			String temp_string = "";
-			
-			temp_string = numbers.get(v.substring(v.length() - 1,v.length()));
-			
-			if(v.substring(v.length()-2,v.length()-1).equals("1"))
+
+			temp_string = numbers.get(v.substring(v.length() - 1, v.length()));
+
+			if (v.substring(v.length() - 2, v.length() - 1).equals("1"))
 				temp_string = numbers.get("10") + temp_string;
-			else if(!v.substring(v.length()-2,v.length()-1).equals("0"))
-				temp_string = numbers.get(v.substring(v.length()-2,v.length()-1)) + numbers.get("10") + temp_string;
-			
-			if(v.substring(v.length()-3,v.length()-2).equals("1"))
+			else if (!v.substring(v.length() - 2, v.length() - 1).equals("0"))
+				temp_string = numbers.get(v.substring(v.length() - 2,
+						v.length() - 1))
+						+ numbers.get("10") + temp_string;
+
+			if (v.substring(v.length() - 3, v.length() - 2).equals("1"))
 				temp_string = numbers.get("100") + temp_string;
-			else if(!v.substring(v.length()-3,v.length()-2).equals("0"))
-				temp_string = numbers.get(v.substring(v.length()-3,v.length()-2)) + numbers.get("100") + temp_string;
-			
-			if(v.substring(v.length()-4,v.length()-3).equals("1"))
+			else if (!v.substring(v.length() - 3, v.length() - 2).equals("0"))
+				temp_string = numbers.get(v.substring(v.length() - 3,
+						v.length() - 2))
+						+ numbers.get("100") + temp_string;
+
+			if (v.substring(v.length() - 4, v.length() - 3).equals("1"))
 				temp_string = numbers.get("1000") + temp_string;
-			else if(!v.substring(v.length()-4,v.length()-3).equals("0"))
-				temp_string = numbers.get(v.substring(v.length()-4,v.length()-3)) + numbers.get("1000") + temp_string;
-			
+			else if (!v.substring(v.length() - 4, v.length() - 3).equals("0"))
+				temp_string = numbers.get(v.substring(v.length() - 4,
+						v.length() - 3))
+						+ numbers.get("1000") + temp_string;
+
 			data_string = temp_string + quartets[c] + data_string;
 			++c;
 		}
-		
-		if(data_string == "") data_string = data_string + zero;
-		/*
-		if(decimal_string != "")
-		{
-			Hashtable<Integer, String> decimal_convert = (Hashtable<Integer, String>) numbers.clone();
-			decimal_convert.put(0, zero);
-			Integer[] keys = new Integer[];
-			Set<Integer> keySet = decimal_convert.keySet();
-			keys = keySet.toArray(keys);
-			for(Integer key : keys)
-			{
-				decimal_string = decimal_string.replace(key.toString(), decimal_convert.get(key));
+
+		if (data_string.equals(""))
+			data_string = data_string + zero;
+
+		if (!decimal_string.equals("")) {
+			Hashtable<String, String> decimal_convert = getNumbers(flags);
+			Set<String> keySet = decimal_convert.keySet();
+			String[] keys = new String[keySet.size()];
+			keySet.toArray(keys);
+			decimal_string = decimal_string.replace("0", getZero(flags));
+			for (String key : keys) {
+				decimal_string = decimal_string.replace(key.toString(),
+						decimal_convert.get(key));
 			}
-			
 			data_string = data_string + "・" + decimal_string;
 		}
-		*/
 		return data_string;
 	}
 
+	/*
+	 * UNDER CONSTRUCTION FOR JapaneseNumerals.from();
+	 *
+	 * protected static ArrayList<Hashtable<String, String>>
+	 * getDefinitionTables() { ArrayList<Hashtable<String, String>> table = new
+	 * ArrayList<Hashtable<String, String>>(); for (int i = 0; i < 2; ++i)
+	 * table.add(new Hashtable<String, String>());
+	 *
+	 * Hashtable<String, String> numbers = getNumbers(0); Set<String> keySet =
+	 * numbers.keySet(); String[] keys = (String[]) keySet.toArray(); for
+	 * (String key : keys) { table.get(0).put(numbers.get(key), key); }
+	 * table.get(0).put("0", getZero(0)); table.get(0).put("0", getZero(1));
+	 *
+	 * return table; }
+	 */
+
 	protected static Hashtable<String, String> getNumbers(int flags) {
 		Hashtable<String, String> numbers = new Hashtable<String, String>();
-		numbers.put("0","");
+		numbers.put("0", "");
 		if ((flags & FLAG_USE_FORMAL) == FLAG_USE_FORMAL) {
 			numbers.put("1", "壱");
 			numbers.put("2", "弐");
