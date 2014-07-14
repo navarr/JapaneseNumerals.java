@@ -1,3 +1,5 @@
+package me.navarr.utils;
+
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -15,10 +17,12 @@ import java.util.Set;
  * The main method used in this class is {@link JapaneseNumerals#to(String, String, int)}.  The last parameter of this
  * takes a flag.  The available flags are described below:
  * <p/>
- * {@link JapaneseNumerals#FLAG_USE_FORMAL} - Returns formal symbols for 1, 2, 3, and 10.  These are commonly used in
+ * {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} - Returns formal symbols for 1, 2, 3, and 10.  These are commonly used in
  * the financial industry.
- * {@link JapaneseNumerals#FLAG_USE_FORMAL_TEN_THOUSAND} - Returns the formal symbol for the 10,000 character.  This was used mainly in
+ * {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL_TEN_THOUSAND} - Returns the formal symbol for the 10,000 character.  This was used mainly in
  * the financial sector in the past, but is no longer common.
+ *
+ * @author Navarr Barnier
  */
 public class JapaneseNumerals {
     /**
@@ -37,7 +41,7 @@ public class JapaneseNumerals {
     /**
      * @param number
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
     public static String to(Integer number) {
         return to(number.toString());
@@ -46,7 +50,7 @@ public class JapaneseNumerals {
     /**
      * @param number
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
     public static String to(String number) {
         return to(number, 0);
@@ -56,7 +60,7 @@ public class JapaneseNumerals {
      * @param number
      * @param flags
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
     public static String to(Integer number, int flags) {
         return to(number.toString(), flags);
@@ -66,7 +70,7 @@ public class JapaneseNumerals {
      * @param number
      * @param flags
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
     public static String to(String number, int flags) {
         return to(number, null, flags);
@@ -75,7 +79,7 @@ public class JapaneseNumerals {
     /**
      * @param number
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
     public static String to(Double number) {
         return to(number, 0);
@@ -85,7 +89,7 @@ public class JapaneseNumerals {
      * @param number
      * @param flags
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
     public static String to(Double number, int flags) {
         Double right = number - number.intValue();
@@ -94,53 +98,53 @@ public class JapaneseNumerals {
 
     /**
      * @param integral
-     * @param fractional
+     * @param decimal
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
-    public static String to(Integer integral, String fractional) {
-        return to(integral.toString(), fractional);
+    public static String to(Integer integral, String decimal) {
+        return to(integral.toString(), decimal);
     }
 
     /**
      * @param integral
-     * @param fractional
+     * @param decimal
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
-    public static String to(String integral, String fractional) {
-        return to(integral, fractional, 0);
+    public static String to(String integral, String decimal) {
+        return to(integral, decimal, 0);
     }
 
     /**
      * @param integral
-     * @param fractional
+     * @param decimal
      * @param flags
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals#to(String, String, int)
+     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
      */
-    public static String to(Integer integral, String fractional, int flags) {
-        return to(integral.toString(), fractional, flags);
+    public static String to(Integer integral, String decimal, int flags) {
+        return to(integral.toString(), decimal, flags);
     }
 
     /**
-     * @param integral   The numbers to the left of the decimal point
-     * @param fractional The numbers to the right of the decimal point
-     * @param flags      Convert certain numbers differently, please see {@link JapaneseNumerals} for more information.
+     * @param integral The numbers to the left of the decimal point
+     * @param decimal  The numbers to the right of the decimal point
+     * @param flags    Convert certain numbers differently, please see {@link JapaneseNumerals} for more information.
      * @return The number formatted in traditional Japanese characters
-     * @see JapaneseNumerals
+     * @see me.navarr.utils.JapaneseNumerals
      */
-    public static String to(String integral, String fractional, int flags) {
-        String integral_string = "";
-        String fractional_string = "";
+    public static String to(String integral, String decimal, int flags) {
+        String integralString = "";
+        String decimalString = "";
 
         Hashtable<String, String> numbers = getNumbers(flags);
         String zero = getZero(flags);
         // Lookup table for myriad identifiers (万, 億, etc.)
         String[] myriadLookup = getMyriads(flags);
 
-        if (!fractional.equals("") && fractional != null) {
-            fractional_string = fractional;
+        if (decimal != null && !decimal.isEmpty()) {
+            decimalString = decimal;
         }
 
         int loopAmount = 4 - (integral.length() % 4);
@@ -157,17 +161,17 @@ public class JapaneseNumerals {
          * hundred ninety-eight man (10,000)"
          */
 
-        int incrementor = 4; // +4 each loop to jump myriads
+        int i = 4; // +4 each loop to jump myriads
         int myriad = 0;
         String[] myriadValues = new String[(integral.length() / 4)];
-        while (incrementor <= integral.length()) {
-            int start = integral.length() - incrementor;
+        while (i <= integral.length()) {
+            int start = integral.length() - i;
             if (start < 0) {
                 start = 0;
             }
             myriadValues[myriad] = integral.substring(start, start + 4);
             ++myriad;
-            incrementor += 4;
+            i += 4;
         }
 
         myriad = 0;
@@ -177,71 +181,97 @@ public class JapaneseNumerals {
                 ++myriad;
                 continue;
             }
-            // A temporary string for the numbers in this individual myriad.
-            String myriadString = "";
 
-            myriadString = numbers.get(v.substring(v.length() - 1, v.length()));
+            /**
+             * myriadString contains the temporary string for this individual myriad.  We then check each place and
+             * move up.
+             *
+             * Each myriad contains 4 western digits, for simplicity we will refer to these as if they were a single
+             * number.  As such, we have a ones, tens, hundreds, and thousands place.  Each place, containing a number,
+             * is followed by a symbol denoting it's place name - excluding ones.
+             *
+             * 十 - Tens
+             * 百 - Hundreds
+             * 千 - Thousands
+             *
+             * As such, 5555 would be 五千五百五十五, where 五 is 5 (1 is a special case, noted below)
+             *
+             * This would then be followed by the myriad indicator (万, 億, etc.)
+             *
+             * You will note that each place has an if statement testing if the number is one, that's because one is
+             * excluded from prefixing these three internal myriad symbols.
+             */
 
+            // Ones
+            String myriadString = numbers.get(v.substring(v.length() - 1, v.length()));
+
+            // Tens
             if (v.substring(v.length() - 2, v.length() - 1).equals("1")) {
+                // if "xx1x"
                 myriadString = numbers.get("10") + myriadString;
             } else if (!v.substring(v.length() - 2, v.length() - 1).equals("0")) {
+                // else if not "xx0x"
                 myriadString = numbers.get(v.substring(v.length() - 2, v.length() - 1)) + numbers.get("10") + myriadString;
             }
 
             if (v.substring(v.length() - 3, v.length() - 2).equals("1")) {
+                // if "x1xx"
                 myriadString = numbers.get("100") + myriadString;
             } else if (!v.substring(v.length() - 3, v.length() - 2).equals("0")) {
+                // else if not "x0xx"
                 myriadString = numbers.get(v.substring(v.length() - 3, v.length() - 2)) + numbers.get("100") + myriadString;
             }
 
             if (v.substring(v.length() - 4, v.length() - 3).equals("1")) {
+                // if "1xxx"
                 myriadString = numbers.get("1000") + myriadString;
             } else if (!v.substring(v.length() - 4, v.length() - 3).equals("0")) {
+                // else if not "0xxx"
                 myriadString = numbers.get(v.substring(v.length() - 4, v.length() - 3)) + numbers.get("1000") + myriadString;
             }
 
-            integral_string = myriadString + myriadLookup[myriad] + integral_string;
+            // Add the myriad symbol and continue to the next myriad
+            integralString = myriadString + myriadLookup[myriad] + integralString;
             ++myriad;
         }
 
-        if (integral_string.equals("")) {
-            integral_string = integral_string + zero;
+        if (integralString.equals("")) {
+            integralString = integralString + zero;
         }
 
-        if (!fractional_string.equals("")) {
-            Hashtable<String, String> decimal_convert = getNumbers(flags);
-            Set<String> keySet = decimal_convert.keySet();
+        /**
+         * Decimals are nice and simple.
+         *
+         * You just replace the number with it's Japanese ones-place equivalent.
+         */
+        if (!decimalString.equals("")) {
+            Hashtable<String, String> decimalConvert = getNumbers(flags);
+
+            Set<String> keySet = decimalConvert.keySet();
             String[] keys = new String[keySet.size()];
             keySet.toArray(keys);
-            fractional_string = fractional_string.replace("0", getZero(flags));
+
+            decimalString = decimalString.replace("0", getZero(flags));
+
             for (String key : keys) {
-                fractional_string = fractional_string.replace(key.toString(), decimal_convert.get(key));
+                decimalString = decimalString.replace(key, decimalConvert.get(key));
             }
-            integral_string = integral_string + "・" + fractional_string;
+
+            integralString = integralString + "・" + decimalString;
         }
-        return integral_string;
+        return integralString;
     }
 
-    /*
-     * UNDER CONSTRUCTION FOR JapaneseNumerals.from();
-     * 
-     * protected static ArrayList<Hashtable<String, String>>
-     * getDefinitionTables() { ArrayList<Hashtable<String, String>> table = new
-     * ArrayList<Hashtable<String, String>>(); for (int i = 0; i < 2; ++i)
-     * table.add(new Hashtable<String, String>());
-     * 
-     * Hashtable<String, String> numbers = getNumbers(0); Set<String> keySet =
-     * numbers.keySet(); String[] keys = (String[]) keySet.toArray(); for
-     * (String key : keys) { table.get(0).put(numbers.get(key), key); }
-     * table.get(0).put("0", getZero(0)); table.get(0).put("0", getZero(1));
-     * 
-     * return table; }
+    /**
+     * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} to get formal characters for 1, 2, 3, and 10
+     * @return A lookup table from western numbers to japanese numbers.  Does not do myriad conversion
      */
-
     protected static Hashtable<String, String> getNumbers(int flags) {
         Hashtable<String, String> numbers = new Hashtable<String, String>();
+
+        // This is blank instead of getZero as it is used for converting a western myriad string to Japanese.
         numbers.put("0", "");
-        if ((flags & FLAG_USE_FORMAL) == FLAG_USE_FORMAL) {
+        if (hasFlag(flags, FLAG_USE_FORMAL)) {
             numbers.put("1", "壱");
             numbers.put("2", "弐");
             numbers.put("3", "参");
@@ -263,13 +293,22 @@ public class JapaneseNumerals {
         return numbers;
     }
 
+    /**
+     * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} for "financial" zero ("rei")
+     * @return Which character to use for Zero
+     */
     protected static String getZero(int flags) {
-        if ((flags & FLAG_USE_FORMAL) == FLAG_USE_FORMAL) {
+        if (hasFlag(flags, FLAG_USE_FORMAL)) {
             return "零";
         }
         return "〇";
     }
 
+    /**
+     * Returns a lookup table of myriad identifiers from 10^4 to 10^68
+     * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL_MAN} for older 10,000 character
+     * @return A myriad lookup table.  Each index is the symbol for 10^(2*index)
+     */
     protected static String[] getMyriads(int flags) {
         String[] myriads = new String[18];
         myriads[0] = ""; // 10^0 - Default Myriad has no symbol
@@ -291,10 +330,21 @@ public class JapaneseNumerals {
         myriads[16] = "不可思議"; // 10^64
         myriads[17] = "無量大数"; // 10^68 (as high as myriads currently go?)
 
-        if ((flags & FLAG_USE_FORMAL_MAN) == FLAG_USE_FORMAL_MAN) {
+        if (hasFlag(flags, FLAG_USE_FORMAL_MAN)) {
             myriads[1] = "萬";
         }
 
         return myriads;
+    }
+
+    /**
+     * Private utility method for eliminating the boilerplate bitwise operator of flag checking
+     *
+     * @param flags Provided Flags
+     * @param flag  Integer value of flag to search for
+     * @return Whether or not the flags contain the flag
+     */
+    private static boolean hasFlag(int flags, int flag) {
+        return ((flags & flag) == flag);
     }
 }
