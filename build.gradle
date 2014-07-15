@@ -1,0 +1,4 @@
+apply plugin: 'java'
+
+// Encode as UTF-8
+[ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
