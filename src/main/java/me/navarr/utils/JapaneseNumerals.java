@@ -28,15 +28,15 @@ public class JapaneseNumerals {
     /**
      * Return formal symbols for 1, 2, 3, and 10 *
      */
-    static final int FLAG_USE_FORMAL = 1;
+    public static final int FLAG_USE_FORMAL = 1;
     /**
      * Return formal symbol for 10,000
      */
-    static final int FLAG_USE_FORMAL_TEN_THOUSAND = 2;
+    public static final int FLAG_USE_FORMAL_TEN_THOUSAND = 2;
     /**
      * Return formal symbol for 10,000
      */
-    static final int FLAG_USE_FORMAL_MAN = 2;
+    public static final int FLAG_USE_FORMAL_MAN = 2;
 
     /**
      * @param number
