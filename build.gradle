@@ -1,4 +1,73 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group "me.navarr.JapaneseNumerals"
+archiesBaseName = "JapaneseNumerals"
+version = "1.0.0"
 
 // Encode as UTF-8
-[ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'JapaneseNumerals'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Utility class for converting Western ("Arabic") Numerals to traditional Japanese Numerals'
+                url 'http://navarr.github.io/JapaneseNumerals'
+
+                scm {
+                    connection 'scm:git:git@github.com:navarr/JapaneseNumerals.java.git'
+                    developerConnection 'scm:git:git@github.com:navarr/JapaneseNumerals.java.git'
+                    url 'https://github.com/navarr/JapaneseNumerals.java'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'https://github.com/navarr/JapaneseNumerals.java/blob/master/LICENSE.md'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'navarr'
+                        name 'Navarr Barnier'
+                        email 'me@navarr.me'
+                    }
+                }
+            }
+        }
+    }
+}
