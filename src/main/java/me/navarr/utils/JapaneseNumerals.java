@@ -1,6 +1,9 @@
 package me.navarr.utils;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,135 +16,31 @@ import java.util.Set;
  * and as far as I'm aware they have not been corrected since.
  * <p/>
  * The source of this information is the wikipedia page on Japanese numerals.
- * <p/>
- * The main method used in this class is {@link JapaneseNumerals#to(String, String, int)}.  The last parameter of this
- * takes a flag.  The available flags are described below:
- * <p/>
- * {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} - Returns formal symbols for 1, 2, 3, and 10.  These are
- * commonly used in the financial industry.
- * {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL_TEN_THOUSAND} - Returns the formal symbol for the 10,000
- * character.  This was used mainly in the financial sector in the past, but is no longer common.
  *
  * @author Navarr Barnier
  */
-public class JapaneseNumerals {
-    /**
-     * Return formal symbols for 1, 2, 3, and 10 *
-     */
-    public static final int FLAG_USE_FORMAL = 1;
-    /**
-     * Return formal symbol for 10,000
-     */
-    public static final int FLAG_USE_FORMAL_TEN_THOUSAND = 2;
-    /**
-     * Return formal symbol for 10,000
-     */
-    public static final int FLAG_USE_FORMAL_MAN = 2;
+public final class JapaneseNumerals {
 
-    /**
-     * @param number
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(Integer number) {
-        return to(number.toString());
-    }
-
-    /**
-     * @param number
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(String number) {
-        return to(number, 0);
-    }
-
-    /**
-     * @param number
-     * @param flags
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(Integer number, int flags) {
-        return to(number.toString(), flags);
-    }
-
-    /**
-     * @param number
-     * @param flags
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(String number, int flags) {
-        return to(number, null, flags);
-    }
-
-    /**
-     * @param number
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(Double number) {
-        return to(number, 0);
-    }
-
-    /**
-     * @param number
-     * @param flags
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(Double number, int flags) {
-        Double right = number - number.intValue();
-        return to(number.intValue(), right.toString().substring(2), flags);
-    }
-
-    /**
-     * @param integral
-     * @param decimal
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(Integer integral, String decimal) {
-        return to(integral.toString(), decimal);
-    }
-
-    /**
-     * @param integral
-     * @param decimal
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(String integral, String decimal) {
-        return to(integral, decimal, 0);
-    }
-
-    /**
-     * @param integral
-     * @param decimal
-     * @param flags
-     * @return The number formatted in traditional Japanese characters
-     * @see me.navarr.utils.JapaneseNumerals#to(String, String, int)
-     */
-    public static String to(Integer integral, String decimal, int flags) {
-        return to(integral.toString(), decimal, flags);
+    private JapaneseNumerals() {
+        // Do not allow class construction
     }
 
     /**
      * @param integral The numbers to the left of the decimal point
      * @param decimal  The numbers to the right of the decimal point
-     * @param flags    Convert certain numbers differently, please see {@link JapaneseNumerals} for more information.
+     * @param useFormalNumbers Use formal symbols for 0, 1, 2, 3, and 10
+     * @param useFormalMan Use formal symbol for 10,000
      * @return The number formatted in traditional Japanese characters
      * @see me.navarr.utils.JapaneseNumerals
      */
-    public static String to(String integral, String decimal, int flags) {
+    public static String to(String integral, @Nullable String decimal, boolean useFormalNumbers, boolean useFormalMan) {
         String integralString = "";
         String decimalString = "";
 
-        Hashtable<String, String> numbers = getNumbers(flags);
-        String zero = getZero(flags);
+        Map<String, String> numbers = getNumbers(useFormalNumbers);
+        String zero = getZero(useFormalNumbers);
         // Lookup table for myriad identifiers (万, 億, etc.)
-        String[] myriadLookup = getMyriads(flags);
+        String[] myriadLookup = getMyriads(useFormalMan);
 
         if (decimal != null && !decimal.isEmpty()) {
             decimalString = decimal;
@@ -152,7 +51,7 @@ public class JapaneseNumerals {
             integral = "0" + integral;
         }
 
-        /**
+        /*
          * Japanese numbers are divided into sections coined "myriads."  These are a lot like commas in US-formatted
          * numbers (1,000,000) except there are four numbers in each group (1,0000,0000).  Each group can be read as an
          * independent number followed by the myriad "name" (excluding the lowest myriad, which does not have one).
@@ -182,7 +81,7 @@ public class JapaneseNumerals {
                 continue;
             }
 
-            /**
+            /*
              * myriadString contains the temporary string for this individual myriad.  We then check each place and
              * move up.
              *
@@ -245,16 +144,15 @@ public class JapaneseNumerals {
          * You just replace the number with it's Japanese ones-place equivalent.
          */
         if (!decimalString.equals("")) {
-            Hashtable<String, String> decimalConvert = getNumbers(flags);
 
-            Set<String> keySet = decimalConvert.keySet();
+            Set<String> keySet = numbers.keySet();
             String[] keys = new String[keySet.size()];
             keySet.toArray(keys);
 
-            decimalString = decimalString.replace("0", getZero(flags));
+            decimalString = decimalString.replace("0", zero);
 
             for (String key : keys) {
-                decimalString = decimalString.replace(key, decimalConvert.get(key));
+                decimalString = decimalString.replace(key, numbers.get(key));
             }
 
             integralString = integralString + "・" + decimalString;
@@ -263,16 +161,15 @@ public class JapaneseNumerals {
     }
 
     /**
-     * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} to get formal characters for
-     *              1, 2, 3, and 10
+     * @param formal Use formal characters for  1, 2, 3, and 10
      * @return A lookup table from western numbers to japanese numbers.  Does not do myriad conversion
      */
-    protected static Hashtable<String, String> getNumbers(int flags) {
-        Hashtable<String, String> numbers = new Hashtable<String, String>();
+    protected static Map<String, String> getNumbers(boolean formal) {
+        Map<String, String> numbers = new Hashtable<String, String>();
 
         // This is blank instead of getZero as it is used for converting a western myriad string to Japanese.
         numbers.put("0", "");
-        if (hasFlag(flags, FLAG_USE_FORMAL)) {
+        if (formal) {
             numbers.put("1", "壱");
             numbers.put("2", "弐");
             numbers.put("3", "参");
@@ -295,11 +192,11 @@ public class JapaneseNumerals {
     }
 
     /**
-     * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} for "financial" zero ("rei")
+     * @param formal Use the "rei" (零) symbol instead of "zero" (〇)
      * @return Which character to use for Zero
      */
-    protected static String getZero(int flags) {
-        if (hasFlag(flags, FLAG_USE_FORMAL)) {
+    protected static String getZero(boolean formal) {
+        if (formal) {
             return "零";
         }
         return "〇";
@@ -308,10 +205,10 @@ public class JapaneseNumerals {
     /**
      * Returns a lookup table of myriad identifiers from 10^4 to 10^68
      *
-     * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL_MAN} for older 10,000 character
+     * @param formal Use a more formal version of the 10,000 chracter.
      * @return A myriad lookup table.  Each index is the symbol for 10^(2*index)
      */
-    protected static String[] getMyriads(int flags) {
+    protected static String[] getMyriads(boolean formal) {
         String[] myriads = new String[18];
         myriads[0] = ""; // 10^0 - Default Myriad has no symbol
         myriads[1] = "万"; // 10^4
@@ -332,21 +229,10 @@ public class JapaneseNumerals {
         myriads[16] = "不可思議"; // 10^64
         myriads[17] = "無量大数"; // 10^68 (as high as myriads currently go?)
 
-        if (hasFlag(flags, FLAG_USE_FORMAL_MAN)) {
+        if (formal) {
             myriads[1] = "萬";
         }
 
         return myriads;
-    }
-
-    /**
-     * Private utility method for eliminating the boilerplate bitwise operator of flag checking
-     *
-     * @param flags Provided Flags
-     * @param flag  Integer value of flag to search for
-     * @return Whether or not the flags contain the flag
-     */
-    private static boolean hasFlag(int flags, int flag) {
-        return ((flags & flag) == flag);
     }
 }
