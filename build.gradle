@@ -7,8 +7,8 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group "me.navarr.JapaneseNumerals"
-archiesBaseName = "JapaneseNumerals"
-version = "1.0.0"
+String archiesBaseName = "JapaneseNumerals"
+String version = "1.0.0"
 
 // Encode as UTF-8
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
@@ -31,21 +31,29 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-signing {
-    sign configurations.archives
+if (hasProperty('signing.keyId') && hasProperty('signing.password') && hasProperty('signing.secretKeyRingFile')) {
+    signing {
+        sign configurations.archives
+    }
 }
+
+boolean publishToSonatype = hasProperty('ossrhUsername') && hasProperty('ossrhPassword')
 
 uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
+            if (publishToSonatype) {
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+            } else {
+                repository(url: mavenLocal().url)
             }
 
             pom.project {
