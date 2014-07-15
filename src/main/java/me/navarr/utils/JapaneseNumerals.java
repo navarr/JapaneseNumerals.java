@@ -1,7 +1,5 @@
 package me.navarr.utils;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
@@ -26,14 +24,14 @@ public final class JapaneseNumerals {
     }
 
     /**
-     * @param integral The numbers to the left of the decimal point
-     * @param decimal  The numbers to the right of the decimal point
+     * @param integral         The numbers to the left of the decimal point
+     * @param decimal          (Nullable) The numbers to the right of the decimal point
      * @param useFormalNumbers Use formal symbols for 0, 1, 2, 3, and 10
-     * @param useFormalMan Use formal symbol for 10,000
+     * @param useFormalMan     Use formal symbol for 10,000
      * @return The number formatted in traditional Japanese characters
      * @see me.navarr.utils.JapaneseNumerals
      */
-    public static String to(String integral, @Nullable String decimal, boolean useFormalNumbers, boolean useFormalMan) {
+    public static String to(String integral, String decimal, boolean useFormalNumbers, boolean useFormalMan) {
         String integralString = "";
         String decimalString = "";
 
