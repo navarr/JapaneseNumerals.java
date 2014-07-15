@@ -17,10 +17,10 @@ import java.util.Set;
  * The main method used in this class is {@link JapaneseNumerals#to(String, String, int)}.  The last parameter of this
  * takes a flag.  The available flags are described below:
  * <p/>
- * {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} - Returns formal symbols for 1, 2, 3, and 10.  These are commonly used in
- * the financial industry.
- * {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL_TEN_THOUSAND} - Returns the formal symbol for the 10,000 character.  This was used mainly in
- * the financial sector in the past, but is no longer common.
+ * {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} - Returns formal symbols for 1, 2, 3, and 10.  These are
+ * commonly used in the financial industry.
+ * {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL_TEN_THOUSAND} - Returns the formal symbol for the 10,000
+ * character.  This was used mainly in the financial sector in the past, but is no longer common.
  *
  * @author Navarr Barnier
  */
@@ -263,7 +263,8 @@ public class JapaneseNumerals {
     }
 
     /**
-     * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} to get formal characters for 1, 2, 3, and 10
+     * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL} to get formal characters for
+     *              1, 2, 3, and 10
      * @return A lookup table from western numbers to japanese numbers.  Does not do myriad conversion
      */
     protected static Hashtable<String, String> getNumbers(int flags) {
@@ -306,6 +307,7 @@ public class JapaneseNumerals {
 
     /**
      * Returns a lookup table of myriad identifiers from 10^4 to 10^68
+     *
      * @param flags Include {@link me.navarr.utils.JapaneseNumerals#FLAG_USE_FORMAL_MAN} for older 10,000 character
      * @return A myriad lookup table.  Each index is the symbol for 10^(2*index)
      */
