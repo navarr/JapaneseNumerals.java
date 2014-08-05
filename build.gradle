@@ -7,8 +7,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group "me.navarr.JapaneseNumerals"
-String archiesBaseName = "JapaneseNumerals"
-String version = "1.0.0"
+version = "1.0.0"
 
 // Encode as UTF-8
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'

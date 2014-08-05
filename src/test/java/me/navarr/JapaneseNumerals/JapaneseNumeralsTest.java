@@ -40,4 +40,9 @@ public class JapaneseNumeralsTest {
 
         assertEquals("0.0123456789" + " must be " + japanese, japanese, JapaneseNumerals.to("0", westernDecimal, false, false));
     }
+
+    @Test
+    public void testNumbersandDecimals() {
+        assertEquals("55.55" + " must be " + "五十五・五五", "五十五・五五", JapaneseNumerals.to("55", "55", false, false));
+    }
 }
